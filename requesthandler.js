@@ -1,5 +1,6 @@
 const fs = require('fs');
 const main_view = fs.readFileSync('./main.html', 'UTF-8');
+const orderlist_view = fs.readFileSync('./orderlist.html', 'UTF-8');
 
 const mariadb = require('./database/connect/mariadb.js');
 
@@ -15,6 +16,24 @@ function main(response) {
     response.writeHead(200, {'Content-Type': 'text/html'});
     response.write(main_view);
     response.end();    
+}
+
+function orderlist(response) {
+    console.log('orderlist');
+
+    response.writeHead(200, {'Content-Type': 'text/html'});
+    mariadb.query("SELECT * FROM orderlist", function(err, rows){
+        response.write(orderlist_view);
+
+        rows.forEach(element => {
+            response.write("<tr>"
+                +"<td>"+element.productId+ "</td>"
+                +"<td>"+element.Date+ "</td>"
+                +"</tr>");
+        });
+        response.write("</table>");
+        response.end();    
+    })
 }
 
 function redRacket(response){
@@ -65,6 +84,7 @@ let handle = {};
 handle['/'] = main;
 handle['/main.css'] = main_css;
 handle['/order'] = order;
+handle['/orderlist.html'] = orderlist;
 // image directory
 handle['/img/redRacket.png'] = redRacket;
 handle['/img/blueRacket.png'] = blueRacket;
