@@ -49,10 +49,22 @@ function main_css(response){
     })
 }
 
+function order(response, productId){
+    response.writeHead(200, {'Content-Type': 'text/html'});
+
+    mariadb.query("INSERT INTO orderlist VALUES(" + productId + ", '" + new Date().toLocaleDateString() + "');", function(err, rows) {
+        console.log(rows);}
+    )
+
+    response.write('order page');
+    response.end();
+}
+
 
 let handle = {};
 handle['/'] = main;
 handle['/main.css'] = main_css;
+handle['/order'] = order;
 // image directory
 handle['/img/redRacket.png'] = redRacket;
 handle['/img/blueRacket.png'] = blueRacket;

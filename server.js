@@ -9,7 +9,9 @@ function start(route, handle){
             return response.end
         }
 
-        route(pathname,handle,response);
+        let queryData = url.parse(request.url, true).query;
+
+        route(pathname,handle,response, queryData.productId);
     }
     
     http.createServer(onRequest).listen(8888);
